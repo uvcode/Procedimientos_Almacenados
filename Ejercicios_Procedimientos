@@ -7,7 +7,7 @@ SELECT AER.IDAERO AS CODIGO,AER.NOMBRE AS AEROPUERTO, PAI.PAIS AS PAIS
 	FROM AEROPUERTO AER
 	JOIN PAIS PAI ON AER.IDPAIS=PAI.IDPAIS
 $body$ 
-LANGUAGE 'plpgsql' VOLATILE;
+LANGUAGE 'sql' VOLATILE;
 
 
 SELECT * FROM MUESTRAAEROPUERTO() AS ("CODIGO" CHARACTER,"AEROPUERTO" TEXT,"PAIS" TEXT);
@@ -17,6 +17,49 @@ SELECT * FROM MUESTRAAEROPUERTO() AS ("CODIGO" CHARACTER,"AEROPUERTO" TEXT,"PAIS
 **********PROCEDIMIENTO 2**************+++
 
 
+CREATE OR REPLACE FUNCTION ejemplo2() RETURNS int LANGUAGE plpgsql AS $$
+DECLARE
+  N1 int;
+  N2 int;
+  N3 int;
+  N4 int;
+  
+BEGIN
+  N1=12;
+  N2=20;
+  N3=15;
+  N4=18;
+  RETURN 
+    (N1+N2+N3+N4)/4;
+END
+$$;
+
+SELECT ejemplo2()
+
+*****************EJEMPLO3*****************
+
+
+CREATE OR REPLACE FUNCTION ejemplo3(in PAIS CHARACTER (10)) RETURNS SETOF "record" AS 
+$BODY$
+
+SELECT  PAS.idpasajero, PAS.nombres,   PAS.idpais,  PAS.telefono,  PAS.email   
+FROM  Pasajero PAS
+WHERE PAS.IdPais = (select IdPais
+                    from Pais
+                    where Pais.Pais=PAIS);
+
+$BODY$
+LANGUAGE sql VOLATILE;
+--UTILIZA CUANQUIER SELECT
+SELECT EJEMPLO3()
+---ESTE NO
+SELECT * FROM ejemplo3('PERU') AS ("idpasajero" CHARACTER,"nombres" TEXT,"idpais" TEXT,"telefono" TEXT,"email" TEXT);
+
+
+*********************EJEMPLO4***************
 
 
 
+******NO ME ALCANZA EL TIEMPO*****
+****ME HUBIERAS PASADO MAS ANTES****
+**ME MANDAS UN IMBOS AL FACE A Q HORA TE TOCA Y TU DUDA****
